@@ -387,11 +387,22 @@ def add_prescricao(form: PrescricaoSchema):
                 error_msg = 'Valor prescrito maior que o estoque'
                 return {"message": error_msg}, 400
             else:
+                 # Monta o payload de consumo dos medicamentos a serem consumidos com base na estrutura esperada
+                payload = {
+                    "medicamentos": [
+                        {
+                            "consumed_refilled_quantity": form.quantity,
+                            "id": form.medicament_id
+                        }                        
+                    ]
+                }
+                print('payload')
+                print(payload)
+                
                 #decrementa o medicamento
-                response = requests.put('http://127.0.0.1:5001/consome_medicamento',data={
-                'consumed_refilled_quantity': form.quantity,
-                'id': form.medicament_id
-            })
+                headers = {'Content-Type': 'application/json'}
+                response = requests.put('http://127.0.0.1:5001/consome_medicamentos',data=json.dumps(payload),headers=headers)
+                
                 if response.status_code != 200:
                     error_msg = response.json().get('message')
                     return {"message": error_msg}, response.status_code
@@ -399,8 +410,9 @@ def add_prescricao(form: PrescricaoSchema):
         else:
             error_msg = response.json().get('message')
             return {"message": error_msg}, response.status_code
-    except requests.exceptions.ConnectionError:
-        return "Service unavailable"
+    except Exception as e:
+        error_msg = 'Não foi possível consumir os medicamentos'
+        return {"message": error_msg}, 400
     
     try:
         #verifica se o procedimento existe
@@ -549,7 +561,11 @@ def delete_multi_prescricoes(body: PrescricaoListBuscaIDSchema):
                 
                 # Repoe todos os medicamentos associados a prescricao
                 headers = {'Content-Type': 'application/json'}
-                response = requests.put('http://127.0.0.1:5001/repoe_medicamentos',data=json.dumps(payload),headers=headers)
+                try:
+                    response = requests.put('http://127.0.0.1:5001/repoe_medicamentos',data=json.dumps(payload),headers=headers)
+                except Exception as e:
+                    error_msg = 'Não foi possível prosseguir com a reposição de medicamentos'
+                    return {"message": error_msg}, 400
                 print(response.text)
                 if response.status_code != 200:
                     error_msg = response.json().get('message')
