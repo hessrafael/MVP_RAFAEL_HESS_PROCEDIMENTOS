@@ -3,6 +3,26 @@
 Este projeto python (v.3.10.6) é para um sistema de gestão de procedimentos em um hospital. Ele deve ser usado em conjuntos com os seguintes sistemas localizados em https://github.com/hessrafael/MVP_RAFAEL_HESS_PACIENTES e https://github.com/hessrafael/MVP_RAFAEL_HESS_MEDICAMENTOS
 
 ---
+## Executando com o Docker
+
+Certifique-se de ter o [Docker](https://docs.docker.com/engine/install/) instalado e em execução em sua máquina.
+
+Navegue até o diretório que contém o Dockerfile e o requirements.txt no terminal.
+Execute **como administrador** o seguinte comando para construir a imagem Docker:
+
+```
+$ docker build -t proc_api .
+```
+
+Uma vez criada a imagem, para executar o container basta executar, **como administrador**, seguinte o comando:
+
+```
+$ docker run -p 5002:5002 proc_api
+```
+
+Uma vez executando, para acessar a API, basta abrir o [http://localhost:5002/#/](http://localhost:5002/#/) no navegador.
+
+---
 ## Como executar sem o Docker (ambiente de desenvolvimento)
 
 Será necessário ter todas as libs python listadas no `requirements.txt` instaladas.
