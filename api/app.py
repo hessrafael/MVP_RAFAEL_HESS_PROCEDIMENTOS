@@ -32,7 +32,8 @@ def home():
     """
     return redirect('/openapi') 
 
-@app.post('/sala', tags=[sala_tag])
+@app.post('/sala', tags=[sala_tag],
+          responses={"200":SalaViewSchema,"400":ErrorSchema, "409":ErrorSchema})
 def add_sala(form: SalaSchema):
     """Adiciona uma nova sala no banco de dados
     """
@@ -63,7 +64,8 @@ def add_sala(form: SalaSchema):
         print(type(e))
         return {"message": error_msg}, 400
 
-@app.get('/sala', tags=[sala_tag])
+@app.get('/sala', tags=[sala_tag],
+         responses={"200":SalaViewSchema,"400":ErrorSchema, "404":ErrorSchema})
 def get_sala(query: SalaBuscaIDSchema):
     """Retorna dados da sala com base no ID
     """
@@ -83,7 +85,8 @@ def get_sala(query: SalaBuscaIDSchema):
         error_msg = "Não foi possível realizar a consulta de sala"
         return {"message": error_msg}, 400
 
-@app.get('/all_salas',tags=[sala_tag])
+@app.get('/all_salas',tags=[sala_tag],
+         responses={"200":SalaListViewSchema,"400":ErrorSchema, "404":ErrorSchema})
 def get_all_salas():
     """Retorna todos as salas cadastrados no banco
     """
@@ -104,7 +107,8 @@ def get_all_salas():
         print(e.__str__())
         return {"message": error_msg}, 400
 
-@app.delete('/delete_sala',tags=[sala_tag])
+@app.delete('/delete_sala',tags=[sala_tag],
+            responses={"200":SalaViewSchema,"400":ErrorSchema, "404":ErrorSchema})
 def delete_sala(form: SalaBuscaIDSchema):
     """Deleta uma sala pelo seu ID
     """
@@ -130,7 +134,8 @@ def delete_sala(form: SalaBuscaIDSchema):
 
 #### PROCEDIMENTOS ####----
 
-@app.post('/procedimento',tags=[procedimento_tag])
+@app.post('/procedimento',tags=[procedimento_tag],
+          responses={"200":ProcedimentoViewSchema,"400":ErrorSchema, "409":ErrorSchema})
 def add_procedimento(form: ProcedimentoSchema):
     """Cadastra um novo procedimento na base de dados
     """
@@ -193,7 +198,8 @@ def add_procedimento(form: ProcedimentoSchema):
         print(type(e))
         return {"message": error_msg}, 400
 
-@app.get('/procedimento',tags=[procedimento_tag])
+@app.get('/procedimento',tags=[procedimento_tag],
+         responses={"200":ProcedimentoViewSchema,"400":ErrorSchema, "404":ErrorSchema})
 def get_procedimento(query: ProcedimentoBuscaIDSchema):
     """Retorna procedimento com base no seu ID
     """
@@ -213,7 +219,8 @@ def get_procedimento(query: ProcedimentoBuscaIDSchema):
         error_msg = "Não foi possível realizar a consulta de procedimento"
         return {"message": error_msg}, 400
 
-@app.get('/procedimentos_paciente',tags=[procedimento_tag])
+@app.get('/procedimentos_paciente',tags=[procedimento_tag],
+         responses={"200":ProcedimentoListViewSchema,"400":ErrorSchema, "404":ErrorSchema})
 def get_procedimentos_paciente(query: ProcedimentoBuscaIDSchema):
     """Retorna procedimento com base no ID do paciente
     """
@@ -233,7 +240,8 @@ def get_procedimentos_paciente(query: ProcedimentoBuscaIDSchema):
         error_msg = "Não foi possível realizar a consulta de procedimento"
         return {"message": error_msg}, 400
 
-@app.get('/all_procedimentos',tags=[procedimento_tag])
+@app.get('/all_procedimentos',tags=[procedimento_tag],
+         responses={"200":ProcedimentoListViewSchema,"400":ErrorSchema, "404":ErrorSchema})
 def get_all_procedimentos():
     """Retorna todos os procedimentos ativos
     """
@@ -260,7 +268,8 @@ def get_all_procedimentos():
 #     """
 #     return delete_single_procedimento(form)
 
-@app.put('/altera_descricao_procedimento', tags=[procedimento_tag])
+@app.put('/altera_descricao_procedimento', tags=[procedimento_tag],
+         responses={"200":ProcedimentoViewSchema,"400":ErrorSchema, "404":ErrorSchema})
 def altera_descricao_procedimento(form: ProcedimentoAlteraDescSchema):
     """Permite alterar a descrição de um procedimento já criado
     """
@@ -285,7 +294,8 @@ def altera_descricao_procedimento(form: ProcedimentoAlteraDescSchema):
         error_msg = "Não foi possível realizar a alteração da descrição do procedimento"
         return {"message": error_msg}, 400
 
-@app.delete('/delete_procedimentos', tags=[procedimento_tag])
+@app.delete('/delete_procedimentos', tags=[procedimento_tag],
+            responses={"200":ProcedimentoListViewSchema,"400":ErrorSchema, "404":ErrorSchema})
 def delete_procedimentos(body: ProcedimentoListBuscaIDSchema):
     """Deleta um ou mais procedimentos 
     """
@@ -371,7 +381,8 @@ def delete_procedimentos(body: ProcedimentoListBuscaIDSchema):
 
     
 #### PRESCRIÇÕES ####----
-@app.post('/prescricao',tags=[prescricao_tag])
+@app.post('/prescricao',tags=[prescricao_tag],
+          responses={"200":PrescricaoViewSchema,"400":ErrorSchema, "404":ErrorSchema})
 def add_prescricao(form: PrescricaoSchema):
     """Adiciona uma prescrição de um medicamento para um procedimento
     """    
@@ -434,7 +445,8 @@ def add_prescricao(form: PrescricaoSchema):
         error_msg = "Não foi possível cadastrar a prescrição"
         return {"message": error_msg}, 400
 
-@app.get('/prescricao',tags=[prescricao_tag])
+@app.get('/prescricao',tags=[prescricao_tag],
+         responses={"200":PrescricaoViewSchema,"400":ErrorSchema, "404":ErrorSchema})
 def get_prescricao(query: PrescricaoBuscaIDSchema):
     """Retorna prescricao com base no ID da prescricao
     """
@@ -454,7 +466,8 @@ def get_prescricao(query: PrescricaoBuscaIDSchema):
         error_msg = "Não foi possível realizar a consulta de prescricao"
         return {"message": error_msg}, 400
 
-@app.get('/prescricao_procedimento',tags=[prescricao_tag])
+@app.get('/prescricao_procedimento',tags=[prescricao_tag],
+         responses={"200":PrescricaoListViewSchema,"400":ErrorSchema, "404":ErrorSchema})
 def get_prescricao_procedimento(query: ProcedimentoBuscaIDSchema):
     """Retorna todas prescricoes associadas a um procedimento
     """
@@ -474,7 +487,8 @@ def get_prescricao_procedimento(query: ProcedimentoBuscaIDSchema):
         error_msg = "Não foi possível realizar a consulta de prescricao"
         return {"message": error_msg}, 400
 
-@app.get('/prescricao_medicamento',tags=[prescricao_tag])
+@app.get('/prescricao_medicamento',tags=[prescricao_tag],
+         responses={"200":PrescricaoListViewSchema,"400":ErrorSchema, "404":ErrorSchema})
 def get_prescricao_medicamento(query: PrescricaoBuscaIDSchema):
     """Retorna todas prescricoes associadas a um medicamento
     """
@@ -500,7 +514,8 @@ def get_prescricao_medicamento(query: PrescricaoBuscaIDSchema):
 #     """    
 #     return delete_single_prescricao(form)
     
-@app.delete('/delete_prescricoes',tags=[prescricao_tag])
+@app.delete('/delete_prescricoes',tags=[prescricao_tag],
+            responses={"200":PrescricaoListViewSchema,"400":ErrorSchema, "404":ErrorSchema})
 def delete_prescricoes(body: PrescricaoListBuscaIDSchema):
     """Deleta uma ou mais prescrição com base no ID e repoe o estoque de medicamento
     """
