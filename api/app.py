@@ -38,7 +38,7 @@ def add_sala(form: SalaSchema):
     """Adiciona uma nova sala no banco de dados
     """
     try:
-        sala = Sala(room_number=form.room_number)
+        sala = Sala(room_number=form.numero)
     except:
         error_msg = "Valores inválidos de parametros para nova instância de Sala"
         return {"message": error_msg}, 400
@@ -386,44 +386,7 @@ def delete_procedimentos(body: ProcedimentoListBuscaIDSchema):
 def add_prescricao(form: PrescricaoSchema):
     """Adiciona uma prescrição de um medicamento para um procedimento
     """    
-    try:
-        #TODO: Se a minha rota de consome_medicamento já verifica o estoque, eu devo fazer essa verificação previa?
-        #verifica o estoque do medicamento prescrito junto ao servico de medicamentos
-        response =  requests.get(f'http://127.0.0.1:5001/medicamento?id={form.medicament_id}')
-        print(response.status_code)
-        if response.status_code == 200:
-            data = response.json()
-            estoque_med = data.get('quantidade')
-            if estoque_med < form.quantity:
-                error_msg = 'Valor prescrito maior que o estoque'
-                return {"message": error_msg}, 400
-            else:
-                 # Monta o payload de consumo dos medicamentos a serem consumidos com base na estrutura esperada
-                payload = {
-                    "medicamentos": [
-                        {
-                            "consumed_refilled_quantity": form.quantity,
-                            "id": form.medicament_id
-                        }                        
-                    ]
-                }
-                print('payload')
-                print(payload)
-                
-                #decrementa o medicamento
-                headers = {'Content-Type': 'application/json'}
-                response = requests.put('http://127.0.0.1:5001/consome_medicamentos',data=json.dumps(payload),headers=headers)
-                
-                if response.status_code != 200:
-                    error_msg = response.json().get('message')
-                    return {"message": error_msg}, response.status_code
-
-        else:
-            error_msg = response.json().get('message')
-            return {"message": error_msg}, response.status_code
-    except Exception as e:
-        error_msg = 'Não foi possível consumir os medicamentos'
-        return {"message": error_msg}, 400
+    
     
     try:
         #verifica se o procedimento existe
@@ -435,6 +398,46 @@ def add_prescricao(form: PrescricaoSchema):
             error_msg = 'Procedimento não encontrado no banco'
             return {"message": error_msg}, 404
         else:
+            try:
+                #TODO: Se a minha rota de consome_medicamento já verifica o estoque, eu devo fazer essa verificação previa?
+                #verifica o estoque do medicamento prescrito junto ao servico de medicamentos
+                response =  requests.get(f'http://127.0.0.1:5001/medicamento?id={form.medicament_id}')
+                print(response.status_code)
+                if response.status_code == 200:
+                    data = response.json()
+                    estoque_med = data.get('quantidade')
+                    if estoque_med < form.quantity:
+                        error_msg = 'Valor prescrito maior que o estoque'
+                        return {"message": error_msg}, 400
+                    else:
+                        # Monta o payload de consumo dos medicamentos a serem consumidos com base na estrutura esperada
+                        payload = {
+                            "medicamentos": [
+                                {
+                                    "consumed_refilled_quantity": form.quantity,
+                                    "id": form.medicament_id
+                                }                        
+                            ]
+                        }
+                        print('payload')
+                        print(payload)
+                        
+                        #decrementa o medicamento
+                        headers = {'Content-Type': 'application/json'}
+                        response = requests.put('http://127.0.0.1:5001/consome_medicamentos',data=json.dumps(payload),headers=headers)
+                        
+                        if response.status_code != 200:
+                            error_msg = response.json().get('message')
+                            return {"message": error_msg}, response.status_code
+
+                else:
+                    error_msg = response.json().get('message')
+                    return {"message": error_msg}, response.status_code
+            
+            except Exception as e:
+                error_msg = 'Não foi possível consumir os medicamentos'
+                return {"message": error_msg}, 400
+            
             prescricao = Prescricao(quantity=form.quantity, proceeding_id=form.proceeding_id,medicament_id=form.medicament_id)
             session.add(prescricao)
             session.commit()

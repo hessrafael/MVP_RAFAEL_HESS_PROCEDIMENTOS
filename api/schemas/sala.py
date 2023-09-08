@@ -5,13 +5,13 @@ from models.sala import Sala
 class SalaSchema(BaseModel):
     """ Define como uma Sala nova deve ser adicionada
     """
-    room_number : int = 10
+    numero : int = 10
 
 class SalaViewSchema(BaseModel):
     """ Define como uma Sala deve ser retornado
     """
     id: str = '206b887e-5465-4e47-b239-17ccc6ebcefa'
-    room_number : int = 10
+    numero : int = 10
 
 class SalaListViewSchema(BaseModel):
     """Define como uma Lista de Salas deve ser retornada

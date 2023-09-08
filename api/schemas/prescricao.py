@@ -12,7 +12,7 @@ class PrescricaoSchema(BaseModel):
 class PrescricaoViewSchema(BaseModel):
     """ Define como uma Prescricao deve ser retornada
     """
-    prescription_id : str = '206b887e-5465-4e47-b239-17ccc6ebcefa'
+    id : str = '206b887e-5465-4e47-b239-17ccc6ebcefa'
     quantity : int = 10
     proceeding_id : str = '206b887e-5465-4e47-b239-17ccc6ebcefa'
     medicament_id : str = '206b887e-5465-4e47-b239-17ccc6ebcefa'

@@ -45,8 +45,8 @@ def apresenta_procedimento(procedimento: Procedimento):
     """
     return{
         "id": procedimento.proceeding_id,
-        "start": procedimento.start_time,
-        "end": procedimento.end_time,
+        "start_time": procedimento.start_time,
+        "end_time": procedimento.end_time,
         "description": procedimento.description,
         "room_id": procedimento.room_id,
         "paciente_id": procedimento.paciente_id
