@@ -8,4 +8,4 @@ SQLAlchemy-Utils==0.38.3
 flask-restx==0.5.1
 pymysql==1.1.0
 requests==2.31.0
- 
+pytest 
