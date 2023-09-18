@@ -12,6 +12,7 @@ from models import Session, Sala, Prescricao, Procedimento
 from schemas import *
 from flask_cors import CORS
 import datetime
+import os
 
 info = Info(title="API gestão Procedimentos", version="1.0.0")
 app = OpenAPI(__name__, info=info)
@@ -23,6 +24,12 @@ home_tag = Tag(name="Documentação", description="Seleção de documentação: 
 procedimento_tag = Tag(name="Procedimentos", description="Adição, visualização e remoção de Procedimentos à base")
 prescricao_tag = Tag(name="Prescrições", description="Adição, visualização e remoção de Prescrições à base")
 sala_tag = Tag(name="Salas", description="Adição, visualização e remoção de Salas à base")
+
+# definindo o host conforme o tipo de execução
+if os.getenv("DOCKER_ENV") == "true":
+    HOST = 'med-cont'
+else:
+    HOST = '127.0.0.1'
 
 #### SALAS ####----
 
@@ -314,7 +321,7 @@ def add_prescricao(form: PrescricaoSchema):
         else:
             try:
                 #verifica o estoque do medicamento prescrito junto ao servico de medicamentos
-                response =  requests.get(f'http://127.0.0.1:5001/medicamento?id={form.medicament_id}')
+                response =  requests.get(f'http://{HOST}:5001/medicamento?id={form.medicament_id}')
                 if response.status_code == 200:
                     data = response.json()
                     estoque_med = data.get('quantidade')
@@ -334,7 +341,7 @@ def add_prescricao(form: PrescricaoSchema):
                         
                         #decrementa o medicamento
                         headers = {'Content-Type': 'application/json'}
-                        response = requests.put('http://127.0.0.1:5001/consome_medicamentos',data=json.dumps(payload),headers=headers)
+                        response = requests.put(f'http://{HOST}:5001/consome_medicamentos',data=json.dumps(payload),headers=headers)
                         
                         if response.status_code != 200:
                             error_msg = response.json().get('message')
@@ -476,7 +483,7 @@ def delete_multi_prescricoes(body: PrescricaoListBuscaIDSchema):
                 # Repoe todos os medicamentos associados a prescricao
                 headers = {'Content-Type': 'application/json'}
                 try:
-                    response = requests.put('http://127.0.0.1:5001/repoe_medicamentos',data=json.dumps(payload),headers=headers)
+                    response = requests.put(f'http://{HOST}:5001/repoe_medicamentos',data=json.dumps(payload),headers=headers)
                 except Exception as e:
                     error_msg = 'Não foi possível prosseguir com a reposição de medicamentos'
                     return {"message": error_msg}, 400

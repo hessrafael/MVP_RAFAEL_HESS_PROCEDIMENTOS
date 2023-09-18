@@ -13,5 +13,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copia o código fonte para o diretório de trabalho
 COPY . .
 
+# Cria variável de ambiente para dizer que está utilizando Docker
+ENV DOCKER_ENV 'true'
+
 # Define o comando de execução da API
 CMD ["flask", "run", "--host", "0.0.0.0", "--port", "5002"]
