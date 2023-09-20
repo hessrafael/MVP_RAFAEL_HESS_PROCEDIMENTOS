@@ -16,7 +16,7 @@ class SalaViewSchema(BaseModel):
 class SalaListViewSchema(BaseModel):
     """Define como uma Lista de Salas deve ser retornada
     """
-    medicamentos: List[SalaViewSchema]
+    salas: List[SalaViewSchema]
 
 class SalaBuscaIDSchema(BaseModel):
     """Define como deve ser feita a busca pela Sala
